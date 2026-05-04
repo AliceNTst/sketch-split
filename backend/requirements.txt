@@ -1,0 +1,3 @@
+psycopg2 == 2.9.12
+#TODO check
+"fastapi[standard]"
