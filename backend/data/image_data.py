@@ -61,6 +61,7 @@ class ImageData():
 
 
     def __calculate_landmarks(self):
+        print(f"Calculating landmarks with mediapipe for {self.path}")
         
         base_options = python.BaseOptions(self.model_asset_path)
         options = vision.PoseLandmarkerOptions(
@@ -68,13 +69,21 @@ class ImageData():
             output_segmentation_masks=True)
         detector = vision.PoseLandmarker.create_from_options(options)
 
-        image = mp.Image.create_from_file(self.path)
+        try:
+            image = mp.Image.create_from_file(self.path)
+        except:
+            print(f"Strange path {self.path}")
+            print(f"Not able to calculate landmarks")
+            return 
 
         detection_result = detector.detect(image)
 
-        pose_landmarks_normalized = detection_result.pose_landmarks[0]
-        self.landmarks = numpy.array([[landmark.x, landmark.y] for landmark in pose_landmarks_normalized])
-        # print(self.landmarks)
+        if len(detection_result.pose_landmarks) > 0:
+            pose_landmarks_normalized = detection_result.pose_landmarks[0]
+            self.landmarks = numpy.array([[landmark.x, landmark.y] for landmark in pose_landmarks_normalized])
+            print(self.landmarks)
+        else:
+            print(f"Not able to calculate landmarks for {self.path}")
 
     def __adjust_image_with_exif_orientation(self, path):
         """

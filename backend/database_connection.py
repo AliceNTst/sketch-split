@@ -4,6 +4,8 @@ import os
 from data.image_data import ImageData
 import json
 import numpy
+from pathlib import Path
+import datetime
 
 
 class Database():
@@ -26,20 +28,44 @@ class Database():
         #     print(row)
         return images
 
-    def input_image(self, path):
-        image = ImageData(path = path)
+    def __input_image(self, path):
+
+        if not path.isascii():
+            print(f"Image path {path} does not match ascii. Image name will be changed.")
+            path = Path(path)
+            time = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+            new_name = f"img_{time}_{hash(str(path))}.jpg"
+            new_path = path.parent / new_name
+            os.rename(path, new_path)
+            path = str(new_path)
+
+        try:
+            image = ImageData(path = path)
+        except:
+            print(f"Not able to add image: {path} to database")
+            return None
         columns = "path, landmarks, parts_angles, connection_angles"
         values = (image.path, json.dumps(image.landmarks.tolist()), json.dumps(image.parts_angles.tolist()), json.dumps(image.connection_angles.tolist()))
 
         self.cursor.execute(f"INSERT INTO images ({columns}) VALUES (%s, %s, %s, %s);", values)
-        self.connection.commit()
+        # self.connection.commit()
         print(f"Image: {path} was added to database")
+        return path
 
     def input_images(self, folder_path):
+        """Image infos will be added to database. If image path doesnt match ascii, file name will be changed. All checked and adjusted paths will be returned at the end"""
+        checked_paths = []
         images = os.listdir(folder_path)
         images_paths = [os.path.join(folder_path, image) for image in images]
         for image_path in images_paths:
-            self.input_image(image_path)
+            print(f"Trying to add image: {image_path} to database")
+            checked_path = self.__input_image(image_path)
+            if checked_path != None:
+                checked_paths.append(checked_path)
+
+        self.connection.commit()
+        print("Changes commited: adding images to database")
+        return checked_paths
 
     def remove_image(self, path):
         self.cursor.execute("DELETE FROM images WHERE path =  %s;", (path,))
@@ -52,6 +78,10 @@ class Database():
         for image_path in images_paths:
             self.remove_image(image_path)
 
+    def remove_all_images(self):
+        self.cursor.execute("DELETE FROM images;")
+        self.connection.commit()
+        print(f"All images data was removed")
 
     def fetch_sketch(self):
         self.cursor.execute("SELECT path, landmarks FROM sketch WHERE id = 1;")

@@ -7,11 +7,11 @@
             "colors": {
                 "primary": "#624996",
                 "secondary": "#dccdf3",
-                "success": "#eda334",
+                "success": "#e5ddef",
                 "info": "#919449",
                 "warning": "#ffce67",
                 "danger": "#fd8055",
-                "light": "#F8F9FA",
+                "light": "#ffffff",
                 "dark": "#343a40",
                 "bg": "#f1edf8",
                 "fg": "#5a5a5a",
@@ -20,7 +20,7 @@
                 "border": "#cecfdd",
                 "inputfg": "#696969",
                 "inputbg": "#fff",
-                "active": "#e5e5e5"
+                "active": "#9c96d7"
             }
         },
 

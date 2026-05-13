@@ -35,15 +35,38 @@ class ReferenceImages:
     def __initialize_images(self):
 
         for path in self.images_paths:
-            image = ImageData(path)
+            try:
+                image = ImageData(path)
+            except:
+                self.images_paths.remove(path)
+                print(f"Not able to add image: {path}")
+                return
             self.images.append(image)
 
     def set_images(self, images, paths):
         self.images = images
         self.images_paths = paths
     
+
+    def add_images(self, paths:list):
+
+        for path in paths:
+            try:
+                image = ImageData(path)
+                self.images.append(image)
+            except:
+                paths.remove(path)
+                print(f"Not able to add image: {path}")
+
+        if self.images_paths == None:
+            self.images_paths = paths
+        else:
+            self.images_paths.extend(paths)
+
+        return paths
     
-    def next(self, count = 10):
+    
+    def next(self, count = 0):
         if self.images_paths == None:
             return None
         if self.images_loaded == self.images_number:
@@ -52,7 +75,7 @@ class ReferenceImages:
             next_images_batch = self.images_paths[self.images_loaded : self.images_number]
             self.images_loaded = self.images_number
             return next_images_batch
-        if count == 10:
+        if count == 0:
             count = self.next_images_batch_number 
         else:
             self.next_images_batch_number = count
@@ -71,3 +94,9 @@ class ReferenceImages:
     
     def reset_loaded_images(self):
         self.images_loaded = 0
+
+    def remove_all_images(self):
+        self.images = []
+        self.images_paths = []
+        self.images_loaded = 0
+        self.images_number = 0

@@ -10,13 +10,23 @@ class RequestData():
     def next(self, number: int):
         url = self.base_url + "images/next"
         params = {"number" : number}
-        response = requests.get(url, params=params)
+        try:
+            response = requests.get(url, params=params)
+        except:
+            print("No connection to backend")
+            return None
+            
         return response.json()
 
     def reload(self):
         url = self.base_url + "images/reload"
         
-        response = requests.get(url)
+        try:
+            response = requests.get(url)
+        except:
+            print("No connection to backend")
+            return None
+
         return response.json()
 
     def __sort(self, options):

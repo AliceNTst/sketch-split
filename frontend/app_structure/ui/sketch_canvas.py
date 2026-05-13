@@ -28,10 +28,14 @@ class SketchCanvas:
         #TODO color store separately
         self.master = master
 
-        self.points = {}   # {name: {"x":..., "y":..., "z":...}}
+        # points holds points info with point name as a key and coords as values
+        self.points = {}   # {name: {"x":..., "y":...}}
+
         self.image = None
         self.tk_image = None
         self.scale = 1.0   # useful if you later resize displayed image
+
+        # holds currently chosen point (in combobox)
         self.point_var = tk.StringVar(value=POINT_NAMES[0])
 
         self.canvas = tk.Canvas(master, cursor="cross")
@@ -156,6 +160,16 @@ class SketchCanvas:
         self.points.pop(name, None)
         self.canvas.delete(f"point_{name}")
         # self.info.config(text=f"Cleared {name}")
+
+    def clear_all(self):
+        print("Remove all points")
+        # for name, p in self.points.items():
+        for name in POINT_NAMES[1:]:
+            self.points.pop(name, None)
+            self.canvas.delete(f"point_{name}")
+            print(f"Removed {name}")
+        print(f"Current points data: {self.points}")
+        
 
     def export_json(self):
         if not self.points:

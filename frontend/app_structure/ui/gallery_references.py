@@ -41,7 +41,8 @@ class Gallery:
 
         self.create_columns()
         # self.load_images(self.reference_images.next(20))
-        self.load_images(self.request.next(20))
+        # self.load_images(self.request.next(20))
+        self.load_images(self.request.reload())
 
         # self.canvas.bind("<MouseWheel>", self.on_scroll)
         self.canvas.bind("<Enter>", lambda e: self.canvas.bind_all("<MouseWheel>", self.scroll))

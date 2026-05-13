@@ -32,6 +32,7 @@ class MainWindow:
 
         left.grid_rowconfigure(0, weight=0)
         left.grid_rowconfigure(1, weight=1)
+        left.grid_rowconfigure(2, weight=0)
         left.grid_columnconfigure(0, weight=1)
 
         right.grid_rowconfigure(0, weight=0)
@@ -62,7 +63,7 @@ class MainWindow:
 
         
 
-        openimage_button = SideButtonL(tool_bar_left, width=150, height=50, r=40, font_size = 10, text="Open Image", command=sketch_canvas.open_image)
+        openimage_button = SideButtonL(tool_bar_left, width=150, height=50, r=40, font_size = 10, text="Open Image", styles_manager=self.styles_manager, command=sketch_canvas.open_image)
         openimage_button.pack("left")
 
         ttk.Label(tool_bar_left, text="Point:", bootstyle=SECONDARY, background="#624996").pack(side="left", padx=(40, 0))
@@ -74,10 +75,20 @@ class MainWindow:
             width=15
         ).pack(side="left", padx = (0, 40))
 
-        json_button = SideButtonR(tool_bar_left, width=140, height=40, r=30, font_size = 8, text="Export JSON", command=sketch_canvas.export_json)
-        json_button.pack("left", padx=10)
-        clear_point_button = PrimaryButton(tool_bar_left, width=140, height=40, r=30, font_size = 8, text="Clear Selected", command=sketch_canvas.clear_selected)
+        # apply_button = SideButtonR(tool_bar_left, width=140, height=40, r=30, font_size = 8, text="Export JSON", styles_manager=self.styles_manager, command=sketch_canvas.export_json)
+        # apply_button.pack("left", padx=10)
+        clear_point_button = PrimaryButton(tool_bar_left, width=140, height=40, r=30, font_size = 8, text="Clear Selected", styles_manager=self.styles_manager, command=sketch_canvas.clear_selected)
         clear_point_button.pack("left")
+        clear_all_points_button = PrimaryButton(tool_bar_left, width=140, height=40, r=30, font_size = 8, text="Clear All", styles_manager=self.styles_manager, command=sketch_canvas.clear_all)
+        clear_all_points_button.pack("left")
+
+
+        action = lambda: self.styles_manager.apply_theme("green")
+        tool_bar_bottom = ttk.Frame(master=left, bootstyle=LIGHT)
+        tool_bar_bottom.grid(row=2, column=0, sticky="ew")
+        style_switcher = CircleButton(tool_bar_bottom, r=30, styles_manager=self.styles_manager, command=action)
+        style_switcher.pack("left")
+        
 
         # sketch_canvas.grid(row=1, column=0, sticky="nsew")
 
@@ -98,6 +109,9 @@ class MainWindow:
         action = lambda: self.styles_manager.apply_theme("green")
         ttk.Button(tool_bar_right, text="filter", style="Custom.TButton", command=action).pack(side="right")
 
+        reload = lambda: gallery.reload_images()
+        ttk.Button(tool_bar_right, text="reload", style="Custom.TButton", command=reload).pack(side="right")
+
         # sbutton = StylisedButton(tool_bar_right, width=200, height=50, r=40, text="base", command = lambda: print("Hi!"))
         # sbutton.pack("left")
 
@@ -116,8 +130,8 @@ class MainWindow:
         gallery = Gallery(master = right, request = self.request)
 
         apply_s = lambda : self.apply(canvas = sketch_canvas, gallery=gallery, filter=filter_frame)
-        json_button = SideButtonR(tool_bar_left, width=140, height=40, r=30, font_size = 8, text="APPLY", command=apply_s)
-        json_button.pack("right", padx=10)
+        apply_button = SideButtonR(tool_bar_left, width=140, height=40, r=30, font_size = 8, text="APPLY", styles_manager=self.styles_manager, command=apply_s)
+        apply_button.pack("right", padx=10)
 
         # main_content_left.remove(filter_frame)
         # main_content_left.update_idletasks()
@@ -177,4 +191,6 @@ class MainWindow:
     #                 return None
             
 
-    
+    def change_theme(self):
+        #TODO create Next theme
+        self.styles_manager.apply_theme("green")

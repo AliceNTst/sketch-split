@@ -3,6 +3,7 @@ from database_connection import Database
 from data.reference_images import ReferenceImages
 from data import images_sorting
 from data.image_data import ImageData
+import os
 
 from pydantic import BaseModel
 
@@ -21,6 +22,9 @@ class Options(BaseModel):
 class Sketch(BaseModel):
     path: str = ""
     landmarks: list
+
+class Images(BaseModel):
+    folder_path: str 
     
 
 app = FastAPI()
@@ -34,7 +38,7 @@ def get_images():
 
 @app.get("/")
 def read_root():
-    return {"Hello": "World"}
+    return {"Hello": "Wanderer"}
 
 
 @app.post("/images/sort")
@@ -62,12 +66,16 @@ def sort_images(options: Options):
 
 @app.get("/images/next")
 def next_images(number: int):
+    next_images_batch = reference_images.next(number)
+    print(f"Next images batch: {next_images_batch}")
     return reference_images.next(number)
 
 @app.get("/images/reload")
 def reload_images():
     if reference_images.images_loaded == 0:
-        return reference_images.next()
+        next_images_batch = reference_images.next()
+        print(f"Next: {next_images_batch}")
+        return next_images_batch
     else:
         return reference_images.get_loaded_images()
 
@@ -89,11 +97,25 @@ def get_sketch():
     sketch = database.fetch_sketch()
     return {"path": sketch.path, "landmarks" : sketch.landmarks}
 
+@app.delete("/remove-all-images")
+def remove_all_images():
+    print("Removing all images data from database")
+    database.remove_all_images()
+    reference_images.remove_all_images()
+    print("Images data removed from database successfully")
+
 
 # @app.get("/items/{item_id}")
 # def read_item(item_id: int, q: str | None = None):
 #     return {"item_id": item_id, "q": q}
 
+@app.post("/images/add")
+def add_images(images: Images):
+    checked_paths = database.input_images(images.folder_path)
+    # folder = os.listdir(images.folder_path)
+    # paths = [os.path.join(images.folder_path, image) for image in folder]
+    added_images = reference_images.add_images(checked_paths)
+    print(f"Successfully added {len(added_images)} images")
 
 
 
