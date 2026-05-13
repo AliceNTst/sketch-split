@@ -20,6 +20,7 @@ class MainWindow:
         
 
     def create_layout(self, app):
+        self.custom_buttons = []
 
         paned = ttk.Panedwindow(app, orient=HORIZONTAL)
         paned.pack(fill=BOTH, expand=True)
@@ -61,10 +62,10 @@ class MainWindow:
         filter_frame = Filter(main_content_left)
 
 
-        
 
         openimage_button = SideButtonL(tool_bar_left, width=150, height=50, r=40, font_size = 10, text="Open Image", styles_manager=self.styles_manager, command=sketch_canvas.open_image)
         openimage_button.pack("left")
+        self.custom_buttons.append(openimage_button)
 
         ttk.Label(tool_bar_left, text="Point:", bootstyle=SECONDARY, background="#624996").pack(side="left", padx=(40, 0))
         ttk.Combobox(
@@ -79,15 +80,18 @@ class MainWindow:
         # apply_button.pack("left", padx=10)
         clear_point_button = PrimaryButton(tool_bar_left, width=140, height=40, r=30, font_size = 8, text="Clear Selected", styles_manager=self.styles_manager, command=sketch_canvas.clear_selected)
         clear_point_button.pack("left")
+        self.custom_buttons.append(clear_point_button)
         clear_all_points_button = PrimaryButton(tool_bar_left, width=140, height=40, r=30, font_size = 8, text="Clear All", styles_manager=self.styles_manager, command=sketch_canvas.clear_all)
         clear_all_points_button.pack("left")
+        self.custom_buttons.append(clear_all_points_button)
 
 
-        action = lambda: self.styles_manager.apply_theme("green")
+        # action = lambda: self.styles_manager.apply_theme("green")
         tool_bar_bottom = ttk.Frame(master=left, bootstyle=LIGHT)
         tool_bar_bottom.grid(row=2, column=0, sticky="ew")
-        style_switcher = CircleButton(tool_bar_bottom, r=30, styles_manager=self.styles_manager, command=action)
+        style_switcher = CircleButton(tool_bar_bottom, r=30, styles_manager=self.styles_manager, command=self.change_theme)
         style_switcher.pack("left")
+        self.custom_buttons.append(style_switcher)
         
 
         # sketch_canvas.grid(row=1, column=0, sticky="nsew")
@@ -132,6 +136,7 @@ class MainWindow:
         apply_s = lambda : self.apply(canvas = sketch_canvas, gallery=gallery, filter=filter_frame)
         apply_button = SideButtonR(tool_bar_left, width=140, height=40, r=30, font_size = 8, text="APPLY", styles_manager=self.styles_manager, command=apply_s)
         apply_button.pack("right", padx=10)
+        self.custom_buttons.append(apply_button)
 
         # main_content_left.remove(filter_frame)
         # main_content_left.update_idletasks()
@@ -194,3 +199,5 @@ class MainWindow:
     def change_theme(self):
         #TODO create Next theme
         self.styles_manager.apply_theme("green")
+        for button in self.custom_buttons:
+            button.update_colors()
