@@ -1,10 +1,12 @@
 import tkinter as tk
 from tkinter import filedialog, ttk, messagebox
-from PIL import Image, ImageTk
+from PIL import Image, ImageTk, ImageFilter
 import json
-# from app_structure.data.image_data import ImageData
 import config
-import numpy
+from ttkbootstrap.constants import *
+from app_structure.ui.button import *
+from app_structure.ui.sketch_canvas import *
+from app_structure.api.api_requests import *
 
 #if adjusted also change in .get_landdmarks(); if changed ------- also adjust .on_click()
 POINT_NAMES = [
@@ -24,8 +26,9 @@ POINT_NAMES = [
 ]
 
 class SketchCanvas:
-    def __init__(self, master):
+    def __init__(self, master, styles_manager):
         #TODO color store separately
+        self.styles_manager = styles_manager
         self.master = master
 
         # points holds points info with point name as a key and coords as values
@@ -39,12 +42,13 @@ class SketchCanvas:
         self.point_var = tk.StringVar(value=POINT_NAMES[0])
 
         self.canvas = tk.Canvas(master, cursor="cross")
-        self.canvas.configure(bg="#ffffff")
+        self.canvas.configure(bg = self.styles_manager.get_light())
         self.canvas.bind("<Configure>", self.on_resize)
         self.canvas.bind("<Button-1>", self.on_click)
 
 
-
+    def update_colors(self):
+        self.canvas.configure(bg = self.styles_manager.get_light())
 
     def grid(self, row, column, sticky):
         self.canvas.grid(row=row, column=column, sticky=sticky)
@@ -141,17 +145,17 @@ class SketchCanvas:
         # self.info.config(text=f"Saved {point_name}: x={x}, y={y}")
 
     def draw_point(self, name, x, y):
-        r = 5
+        r = 6
         self.canvas.create_oval(
             x - r, y - r, x + r, y + r,
-            fill="red", outline="black",
+            fill="#ffffff", outline="black",
             tags=(f"point_{name}",)
         )
         self.canvas.create_text(
-            x + 8, y - 8,
+            x + r + 8, y + r - 8,
             text=name,
             anchor="nw",
-            fill="blue",
+            fill="#ffffff",
             tags=(f"point_{name}",)
         )
 
@@ -230,43 +234,4 @@ class SketchCanvas:
         return landmarks
 
 
-    # def apply(self):
-    #     if not self.points:
-    #         return
-        
-    #     get_point = lambda _name: [self.points[_name]["x"], self.points[_name]["y"]]
-    #     landmarks = [config.no_point_value]*33
-    #     for point_name in self.points.keys():
-    #         # if point_name == "shoulder-left":
-    #         #     landmarks[11] = get_point(point_name)
-    #         match point_name:
-    #             case "shoulder-left":
-    #                 landmarks[11] = get_point(point_name)
-    #             case "shoulder-right":
-    #                 landmarks[12] = get_point(point_name)
-    #             case "hip-left":
-    #                 landmarks[23] = get_point(point_name)
-    #             case "elbow-right":
-    #                 landmarks[14] = get_point(point_name)
-    #             case "elbow-left":
-    #                 landmarks[13] = get_point(point_name)
-    #             case "knee-right":
-    #                 landmarks[26] = get_point(point_name)
-    #             case "knee-left":
-    #                 landmarks[25] = get_point(point_name)
-    #             case "wrist-right":
-    #                 landmarks[16] = get_point(point_name)
-    #             case "wrist-left":
-    #                 landmarks[15] = get_point(point_name)
-    #             case "ankle-right":
-    #                 landmarks[28] = get_point(point_name)
-    #             case "ankle-left":
-    #                 landmarks[27] = get_point(point_name)
-    #             case _:
-    #                 print("ATTENTION - starnge naming for point in sketch")
-        
-    #     landmarks = numpy.array(landmarks)
-    #     sketch_data = ImageData(landmarks = landmarks)
 
-        # sorted_images = sort_images(sketch= sketch, images=images)
-        #  sorted_paths = [image.path for image in sorted_images]

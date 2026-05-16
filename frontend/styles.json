@@ -28,43 +28,43 @@
             "type": "light",
             "colors": {
                 "primary": "#919449",
-                "secondary": "#919449",
-                "success": "#919449",
+                "secondary": "#dbde9e",
+                "success": "#e7d2a5",
                 "info": "#919449",
-                "warning": "#919449",
-                "danger": "#919449",
-                "light": "#919449",
-                "dark": "#919449",
-                "bg": "#919449",
-                "fg": "#919449",
-                "selectbg": "#919449",
-                "selectfg": "#919449",
-                "border": "#919449",
-                "inputfg": "#919449",
-                "inputbg": "#919449",
-                "active": "#919449"
+                "warning": "#ffce67",
+                "danger": "#fd8055",
+                "light": "#ffffff",
+                "dark": "#343a40",
+                "bg": "#f9f4f0",
+                "fg": "#5a5a5a",
+                "selectbg": "#f3969a",
+                "selectfg": "#ffffff",
+                "border": "#e1bab3",
+                "inputfg": "#696969",
+                "inputbg": "#fff",
+                "active": "#c88a62"
             }
         },
 
-        "yellow": {
+        "sakura": {
             "type": "light",
             "colors": {
-                "primary": "#ffce67",
-                "secondary": "#ffce67",
-                "success": "#ffce67",
-                "info": "#ffce67",
+                "primary": "#9e543f",
+                "secondary": "#acc486",
+                "success": "#d0dfaa",
+                "info": "#919449",
                 "warning": "#ffce67",
-                "danger": "#ffce67",
-                "light": "#ffce67",
-                "dark": "#ffce67",
-                "bg": "#ffce67",
-                "fg": "#ffce67",
-                "selectbg": "#ffce67",
-                "selectfg": "#ffce67",
-                "border": "#ffce67",
-                "inputfg": "#ffce67",
-                "inputbg": "#ffce67",
-                "active": "#ffce67"
+                "danger": "#fd8055",
+                "light": "#ffffff",
+                "dark": "#343a40",
+                "bg": "#f8fbee",
+                "fg": "#5a5a5a",
+                "selectbg": "#f3969a",
+                "selectfg": "#ffffff",
+                "border": "#ebb8b8",
+                "inputfg": "#696969",
+                "inputbg": "#fff",
+                "active": "#ebb8b8"
             }
         }
     }]} 

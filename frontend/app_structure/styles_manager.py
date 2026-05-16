@@ -4,10 +4,12 @@ import ttkbootstrap as ttk
 
 class StylesManager:
     def __init__(self, theme):
-        self.theme = theme
+        self.current_theme = theme
         self.load_themes()
         self.apply_theme(theme)
 
+        self.themes = self.style.theme_names()[18:]
+        self.current_theme_number = self.themes.index(theme)
 
     # def apply_theme(self, theme_name):
     #     self.theme = ColorPalettes[theme_name]
@@ -20,6 +22,16 @@ class StylesManager:
     def apply_theme(self, name):
         self.style.theme_use(name)
 
+    def next_theme(self):
+        print(self.style.theme_names())
+        print(self.themes)
+        if self.current_theme_number == len(self.themes) - 1:
+            self.current_theme_number = 0
+        else:
+            self.current_theme_number += 1
+
+        self.apply_theme(self.themes[self.current_theme_number])
+
     def get_primary(self):
         return self.style.colors.primary
 
@@ -31,6 +43,12 @@ class StylesManager:
     
     def get_active(self):
         return self.style.colors.active
+    
+    def get_light(self):
+        return self.style.colors.light
+    
+    def get_bg(self):
+        return self.style.colors.bg
 
         
 
