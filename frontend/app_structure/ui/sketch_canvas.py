@@ -42,6 +42,7 @@ POINT_RELATIONS = {
 
 class SketchCanvas:
     def __init__(self, master, styles_manager):
+        self.image_path = None
         self.styles_manager = styles_manager
         self.master = master
         self.blurred = False
@@ -101,6 +102,8 @@ class SketchCanvas:
         )
         if not path:
             return
+
+        self.image_path = path
 
         self.image = Image.open(path)
         self.canvas.update_idletasks()

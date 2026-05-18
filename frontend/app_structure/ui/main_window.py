@@ -5,11 +5,9 @@ from app_structure.styles_manager import StylesManager
 from app_structure.ui.button import *
 from app_structure.ui.sketch_canvas import *
 from app_structure.ui.gallery_references import Gallery
-# from app_structure.data import images_sorting
-# from app_structure.data.images_sorting import Coefficients
-# from app_structure.data.reference_images import ReferenceImages
 from app_structure.ui.filter import Filter
 from app_structure.api.api_requests import *
+from tkinter import font
 
 class MainWindow:
     styles_manager: StylesManager = None
@@ -18,6 +16,13 @@ class MainWindow:
         self.styles_manager = styles_manager
         self.request = local_request
         self.create_layout(app)
+
+        #TODO adjust font
+        # Get Tk's default font object
+        # default_font = font.nametofont("TkDefaultFont")
+
+        # # Modify it in place  "Segoe UI"
+        # default_font.configure(family="Nunito")
         
 
     def create_layout(self, app):
@@ -60,12 +65,12 @@ class MainWindow:
 
 
 
-        openimage_button = SideButtonL(tool_bar_left, width=150, height=50, r=40, font_size = 10, text="Open Image", styles_manager=self.styles_manager, command=sketch_canvas.open_image)
+        openimage_button = SideButtonL(tool_bar_left, width=165, height=50, r=40, font_size = 10, text="Open Image", styles_manager=self.styles_manager, command=sketch_canvas.open_image)
         openimage_button.pack("left")
         self.custom_buttons.append(openimage_button)
 
         point_label = ttk.Label(tool_bar_left, text="Point:", bootstyle=SECONDARY, background=self.styles_manager.get_primary())
-        point_label.pack(side="left", padx=(40, 0))
+        point_label.pack(side="left", padx=(60, 0))
         self.tool_bar_left_labels.append(point_label)
         ttk.Combobox(
             tool_bar_left,
@@ -73,18 +78,15 @@ class MainWindow:
             values=POINT_NAMES,
             state="readonly",
             width=15
-        ).pack(side="left", padx = (0, 40))
+        ).pack(side="left", padx = (0, 20))
 
        
         clear_point_button = PrimaryButton(tool_bar_left, width=120, height=40, r=30, font_size = 8, text="Clear Selected", styles_manager=self.styles_manager, command=sketch_canvas.clear_selected)
-        clear_point_button.pack(side="left", padx=(0, 5))
+        clear_point_button.pack(side="left", padx=(0, 5), anchor="n")
         self.custom_buttons.append(clear_point_button)
         clear_all_points_button = PrimaryButton(tool_bar_left, width=120, height=40, r=30, font_size = 8, text="Clear All", styles_manager=self.styles_manager, command=sketch_canvas.clear_all)
-        clear_all_points_button.pack(side="left", padx=(5, 0))
+        clear_all_points_button.pack(side="left", padx=(5, 0), anchor="n")
         self.custom_buttons.append(clear_all_points_button)
-
-
-        
 
 
         #Right side
@@ -125,6 +127,11 @@ class MainWindow:
         apply_button = SideButtonR(tool_bar_left, width=140, height=50, r=30, font_size = 8, text="APPLY", styles_manager=self.styles_manager, command=apply_s)
         apply_button.pack("right")
         self.custom_buttons.append(apply_button)
+
+        _add_to_gallery = lambda: self._add_sketch_to_gallery(sketch_canvas)
+        add_sketch_to_gallery = SecondaryButton(tool_bar_left, width=120, height=30, r=30, font_size = 8, text="add to Gallery", bg_style="primary", styles_manager=self.styles_manager, command=_add_to_gallery)
+        add_sketch_to_gallery.pack(side="right", padx = (0, 10))
+        self.custom_buttons.append(add_sketch_to_gallery)
 
 
 
@@ -225,3 +232,15 @@ class MainWindow:
         canvas.set_text_color_index(new_index)
         label.config(bootstyle=self.styles_manager.get_text_bootstyles()[new_index])
         canvas.on_resize()
+
+    def _add_sketch_to_gallery(self, canvas):
+        landmarks = canvas.get_landmarks()
+
+        if numpy.array_equal(landmarks, None):
+            return
+        
+        path = canvas.image_path
+
+        print(f"Send request to add sketch: {path} {landmarks} to database")
+        self.request.add_sketch_to_gallery(path = path, landmarks=landmarks)
+        

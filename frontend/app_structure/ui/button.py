@@ -76,6 +76,8 @@ class StylisedButton():
                     self.canvas.configure(bg = self.styles_manager.get_secondary())
                 case "light":
                     self.canvas.configure(bg = self.styles_manager.get_light())
+                case "bg":
+                    self.canvas.configure(bg = self.styles_manager.get_bg())
             # self.canvas.configure(bg = self.styles_manager.get_primary())
             self.default_color = self.styles_manager.get_success()
             self.hover_color = self.styles_manager.get_active()
@@ -216,8 +218,9 @@ class PrimaryButton(StylisedButton):
 
 class SecondaryButton(StylisedButton):
 
-    def __init__(self, master, width, height, r, text, command, styles_manager = None, font_size = 10):
+    def __init__(self, master, width, height, r, text, command, styles_manager = None, font_size = 10, bg_style="bg"):
         self.text = text
+        self.bg_style = bg_style
 
         self.styles_manager = styles_manager
         self.canvas = ttk.Canvas(master, width=width, height=height)
@@ -243,7 +246,16 @@ class SecondaryButton(StylisedButton):
 
     def __set_colors(self):
         if self.styles_manager != None:
-            self.canvas.configure(bg = self.styles_manager.get_bg())
+            match self.bg_style:
+                case "primary":
+                    self.canvas.configure(bg = self.styles_manager.get_primary())
+                case "secondary":
+                    self.canvas.configure(bg = self.styles_manager.get_secondary())
+                case "light":
+                    self.canvas.configure(bg = self.styles_manager.get_light())
+                case "bg":
+                    self.canvas.configure(bg = self.styles_manager.get_bg())
+            # self.canvas.configure(bg = self.styles_manager.get_bg())
             self.default_color = self.styles_manager.get_primary()
             self.hover_color = self.styles_manager.get_success()
             self.text_color = self.styles_manager.get_light()

@@ -47,6 +47,18 @@ class RequestData():
         self.__sort(options)
         return self.reload()
     
+    def add_sketch_to_gallery(self, path, landmarks):
+        url = self.base_url + "sketch/add-to-gallery"
+        body = {"path": path, "landmarks": landmarks}
+
+        try:
+            response = requests.post(url, json=body)
+        except:
+            print("No connection to backend")
+            return None
+        return response.json()
+
+    
 local_request = RequestData("http://127.0.0.1:8000/")
 
 

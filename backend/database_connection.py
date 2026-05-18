@@ -66,6 +66,20 @@ class Database():
         self.connection.commit()
         print("Changes commited: adding images to database")
         return checked_paths
+    
+    def input_image(self, path, landmarks):
+        try:
+            image = ImageData(path = path, landmarks=landmarks)
+        except:
+            print(f"Not able to add image: {path} to database")
+            return None
+        columns = "path, landmarks, parts_angles, connection_angles"
+        values = (image.path, json.dumps(image.landmarks.tolist()), json.dumps(image.parts_angles.tolist()), json.dumps(image.connection_angles.tolist()))
+
+        self.cursor.execute(f"INSERT INTO images ({columns}) VALUES (%s, %s, %s, %s);", values)
+        self.connection.commit()
+        print(f"Image: {path} was added to database")
+        return path
 
     def remove_image(self, path):
         self.cursor.execute("DELETE FROM images WHERE path =  %s;", (path,))

@@ -104,6 +104,10 @@ def remove_all_images():
     reference_images.remove_all_images()
     print("Images data removed from database successfully")
 
+@app.post("/sketch/add-to-gallery")
+def set_sketch(sketch: Sketch):
+    print(f"Landmarks-sketch: {sketch.landmarks}")
+    database.input_image(path = sketch.path, landmarks= sketch.landmarks)
 
 # @app.get("/items/{item_id}")
 # def read_item(item_id: int, q: str | None = None):
