@@ -82,7 +82,7 @@ class Database():
             print(f"Not able to add image: {path} to database")
             return None
         columns = "path, landmarks, parts_angles, connection_angles"
-        values = (image.path, json.dumps(image.landmarks.tolist()), json.dumps(image.parts_angles.tolist()), json.dumps(image.connection_angles.tolist()))
+        values = (image.path, json.dumps(image.landmarks), json.dumps(image.parts_angles.tolist()), json.dumps(image.connection_angles.tolist()))
 
         self.cursor.execute(f"INSERT INTO images ({columns}) VALUES (%s, %s, %s, %s);", values)
         self.connection.commit()

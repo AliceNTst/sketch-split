@@ -53,6 +53,7 @@ class RequestData():
 
         try:
             response = requests.post(url, json=body)
+            print(response)
         except:
             print("No connection to backend")
             return None

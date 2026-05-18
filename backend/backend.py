@@ -34,7 +34,10 @@ reference_images = ReferenceImages(database)
 @app.get("/images")
 def get_images():
     # images = database.fetch_images()
-    return reference_images.images_paths
+    # return reference_images.images_paths
+    images = database.fetch_images()
+    images_paths = [image.path for image in images]
+    return images_paths
 
 @app.get("/")
 def read_root():
@@ -72,6 +75,10 @@ def next_images(number: int):
 
 @app.get("/images/reload")
 def reload_images():
+    reference_images.images = reference_images.database.fetch_images()
+    reference_images.images_paths = [image.path for image in reference_images.images]
+    reference_images.images_number = len(reference_images.images_paths)
+    
     if reference_images.images_loaded == 0:
         next_images_batch = reference_images.next()
         print(f"Next: {next_images_batch}")
