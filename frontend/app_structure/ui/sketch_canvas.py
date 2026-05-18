@@ -186,19 +186,7 @@ class SketchCanvas:
 
         self.remove_lines_for(point_name)
         self.add_lines_for(point_name)
-        # for end_point in POINT_RELATIONS[point_name]:
-        #     if end_point in self.points:
-        #         line_id = self.draw_line(self.points[point_name]["x"]*self.image_scale, self.points[point_name]["y"]*self.image_scale, self.points[end_point]["x"]*self.image_scale, self.points[end_point]["y"]*self.image_scale)
-        #         if end_point in self.lines:
-        #             self.lines[end_point] = []
-        #         self.lines[end_point].append(line_id)
-
-        # if point_name in self.lines:
-        #         self.lines[point_name] = []
-        # self.lines[point_name].append(line_id)
         
-
-        # self.info.config(text=f"Saved {point_name}: x={x}, y={y}")
 
 
     def add_lines_for(self, point_name):
@@ -215,9 +203,7 @@ class SketchCanvas:
                     self.points_info_lines[point_name] = []
                 self.points_info_lines[point_name].append(line_id)
 
-        # if not point_name in self.lines:
-        #         self.lines[point_name] = []
-        # self.lines[point_name].append(line_id)
+
         print(f"Lines added for point: {point_name}")
         print(f"Current lines info: {self.lines}")
 
@@ -242,14 +228,7 @@ class SketchCanvas:
         print(f"Current lines info: {self.lines}")
 
     def update_lines(self):
-        # adjusted_old_lines = {} # {old line: new line}
-        # for point_name in list(self.points_info_lines.keys()):
-        #     for line in list(self.points_info_lines[point_name]):
-        #         if line in adjusted_old_lines:
-        #             pass
-        #         else:
-        #             new_line = self.draw_line(self.points[point_name]["x"]*self.image_scale, self.points[point_name]["y"]*self.image_scale, self.points[end_point]["x"]*self.image_scale, self.points[end_point]["y"]*self.image_scale)
-        #             self.canvas.delete(line)
+       
         print("Update lines: ")
         for line in list(self.lines.keys()):
             start_point = self.lines[line][0]
@@ -307,6 +286,8 @@ class SketchCanvas:
         self.canvas.delete(f"point_{name}")
         # self.info.config(text=f"Cleared {name}")
 
+        self.remove_lines_for(name)
+
     def clear_all(self):
         print("Remove all points")
         # for name, p in self.points.items():
@@ -315,6 +296,15 @@ class SketchCanvas:
             self.canvas.delete(f"point_{name}")
             print(f"Removed {name}")
         print(f"Current points data: {self.points}")
+
+        print("Remove all lines")
+        for line in list(self.lines.keys()):
+            self.canvas.delete(line)
+            self.lines.pop(line)
+            print(f"Removed line: {line}")
+        print(f"Current lines: {self.lines}")
+        self.points_info_lines.clear()
+        print(f"Current point info lines: {self.points_info_lines}")
         
 
     def export_json(self):
