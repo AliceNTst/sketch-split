@@ -6,11 +6,19 @@ import json
 import numpy
 from pathlib import Path
 import datetime
+from dotenv import load_dotenv
 
 
 class Database():
-    #TODO relocate login data
-    def __init__(self, connection_string = "host='localhost' dbname='sketch' user='postgres' password='datarinebase_2026'"):
+    def __init__(self):
+        load_dotenv()
+
+        host = os.getenv("host")
+        dbname = os.getenv("dbname")
+        user = os.getenv("user")
+        password = os.getenv("password")
+        connection_string = f"host='{host}' dbname='{dbname}' user='{user}' password='{password}'"
+
         self.connection = psycopg2.connect(connection_string)
         self.cursor = self.connection.cursor()
         print ("Connected to database!\n")
