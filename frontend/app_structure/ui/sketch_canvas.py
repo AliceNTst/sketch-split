@@ -25,14 +25,32 @@ POINT_NAMES = [
     "ankle-right"
 ]
 
+POINT_RELATIONS = {
+    "shoulder-left" : ["shoulder-right", "hip-left", "elbow-left"],
+    "shoulder-right" : ["shoulder-left", "hip-right", "elbow-right"],
+    "hip-left" : ["hip-right", "shoulder-left"],
+    "hip-right" : ["hip-left" , "shoulder-right"],
+    "elbow-left" : ["shoulder-left", "wrist-left"],
+    "elbow-right" : ["shoulder-right" , "wrist-right"],
+    "knee-left" : ["hip-left", "ankle-left"],
+    "knee-right" : ["hip-right" , "ankle-right"],
+    "wrist-left" : ["elbow-left"],
+    "wrist-right" : ["elbow-right"],
+    "ankle-left" : ["knee-left"],
+    "ankle-right" : ["knee-right" ]
+}
+
 class SketchCanvas:
     def __init__(self, master, styles_manager):
         #TODO color store separately
         self.styles_manager = styles_manager
         self.master = master
+        self.blurred = False
 
         # points holds points info with point name as a key and coords as values
         self.points = {}   # {name: {"x":..., "y":...}}
+        self.points_info_lines = {}  #{point_name : [lines_ids]}
+        self.lines = {} #{line_id: [points]}
 
         self.image = None
         self.tk_image = None
@@ -63,6 +81,17 @@ class SketchCanvas:
 
     # def bind(self, sequence, function):
     #     self.canvas.bind("<Button-1>", self.on_click)
+
+    def toggle_blur(self):
+        if not self.blurred:
+            blurred_image = self.resized_image.filter(ImageFilter.GaussianBlur(radius=10))
+            self.tk_image= ImageTk.PhotoImage(blurred_image)
+            self.canvas.itemconfig(self.image_id, image=self.tk_image)
+            self.blurred = True
+        else:
+            self.tk_image= ImageTk.PhotoImage(self.resized_image)
+            self.canvas.itemconfig(self.image_id, image=self.tk_image)
+            self.blurred = False
 
     def open_image(self):
         path = filedialog.askopenfilename(
@@ -114,12 +143,20 @@ class SketchCanvas:
         print(*args)
         print('Message end')
         self.resized_image = self.resize_image(self.image, canvas_w=self.canvas.winfo_width(), canvas_h=self.canvas.winfo_height())
-        self.tk_image = ImageTk.PhotoImage(self.resized_image)
+        image = self.resized_image
+        if self.blurred == True:
+            image = self.resized_image.filter(ImageFilter.GaussianBlur(radius=10))
+        self.tk_image = ImageTk.PhotoImage(image)
         self.canvas.itemconfig(self.image_id, image=self.tk_image)
         for name, p in self.points.items():
             self.canvas.delete(f"point_{name}")
             self.draw_point(name, p["x"]* self.image_scale, p["y"]* self.image_scale)
             print(f'{p["x"]}, {p["y"]}')
+
+        # for point in list(self.points_info_lines.keys()):
+        #     self.remove_lines_for(point)
+        #     self.add_lines_for(point)
+        self.update_lines()
 
     def on_click(self, event):
         if self.tk_image is None:
@@ -134,7 +171,7 @@ class SketchCanvas:
         y = event.y
 
         original_x = x/self.image_scale
-        original_y = y//self.image_scale
+        original_y = y/self.image_scale
         #Save points relative to original image size
         self.points[point_name] = {"x": original_x, "y": original_y}
 
@@ -142,7 +179,78 @@ class SketchCanvas:
         self.canvas.delete(f"point_{point_name}")
         self.draw_point(point_name, x, y)
 
+        self.remove_lines_for(point_name)
+        self.add_lines_for(point_name)
+        # for end_point in POINT_RELATIONS[point_name]:
+        #     if end_point in self.points:
+        #         line_id = self.draw_line(self.points[point_name]["x"]*self.image_scale, self.points[point_name]["y"]*self.image_scale, self.points[end_point]["x"]*self.image_scale, self.points[end_point]["y"]*self.image_scale)
+        #         if end_point in self.lines:
+        #             self.lines[end_point] = []
+        #         self.lines[end_point].append(line_id)
+
+        # if point_name in self.lines:
+        #         self.lines[point_name] = []
+        # self.lines[point_name].append(line_id)
+        
+
         # self.info.config(text=f"Saved {point_name}: x={x}, y={y}")
+
+
+    def add_lines_for(self, point_name):
+        for end_point in POINT_RELATIONS[point_name]:
+            if end_point in self.points:
+                line_id = self.draw_line(self.points[point_name]["x"]*self.image_scale, self.points[point_name]["y"]*self.image_scale, self.points[end_point]["x"]*self.image_scale, self.points[end_point]["y"]*self.image_scale)
+                print(f"Draw line: {point_name} - {end_point}: {line_id}")
+                if not end_point in self.points_info_lines:
+                    self.points_info_lines[end_point] = []
+                self.points_info_lines[end_point].append(line_id)
+                self.lines[line_id] = [point_name, end_point]
+
+                if not point_name in self.points_info_lines:
+                    self.points_info_lines[point_name] = []
+                self.points_info_lines[point_name].append(line_id)
+
+        # if not point_name in self.lines:
+        #         self.lines[point_name] = []
+        # self.lines[point_name].append(line_id)
+
+    def remove_lines_for(self, point_name):
+        if not point_name in self.points_info_lines:
+            return
+        
+        if len(self.points_info_lines[point_name]) == 0:
+            return
+
+        for line in list(self.points_info_lines[point_name]):
+            for end_point in POINT_RELATIONS[point_name]:
+                if end_point in self.points_info_lines:
+                    if line in self.points_info_lines[end_point]:
+                        self.points_info_lines[end_point].remove(line)
+                        print(f"Remove line: {point_name} - {end_point} : {line}")
+                        self.canvas.delete(line)
+                        self.lines.pop(line)
+
+        self.points_info_lines[point_name] = []
+
+    def update_lines(self):
+        # adjusted_old_lines = {} # {old line: new line}
+        # for point_name in list(self.points_info_lines.keys()):
+        #     for line in list(self.points_info_lines[point_name]):
+        #         if line in adjusted_old_lines:
+        #             pass
+        #         else:
+        #             new_line = self.draw_line(self.points[point_name]["x"]*self.image_scale, self.points[point_name]["y"]*self.image_scale, self.points[end_point]["x"]*self.image_scale, self.points[end_point]["y"]*self.image_scale)
+        #             self.canvas.delete(line)
+        print("Update lines: ")
+        for line in list(self.lines.keys()):
+            start_point = self.lines[line][0]
+            end_point = self.lines[line][1]
+            self.canvas.delete(line)
+            new_line = self.draw_line(self.points[start_point]["x"]*self.image_scale, self.points[start_point]["y"]*self.image_scale, self.points[end_point]["x"]*self.image_scale, self.points[end_point]["y"]*self.image_scale)
+            print(f"Remove line: {start_point} - {end_point} : {line}")
+            self.lines.pop(line)
+            print(f"Add line: {start_point} - {end_point} : {new_line}")
+            self.lines[new_line] = [start_point, end_point]
 
     def draw_point(self, name, x, y):
         r = 6
@@ -158,6 +266,14 @@ class SketchCanvas:
             fill="#ffffff",
             tags=(f"point_{name}",)
         )
+
+    def draw_line(self, x1, y1, x2, y2):
+        line = self.canvas.create_line(
+        x1, y1,
+        x2, y2,
+        width=2,
+        fill="#ffffff")
+        return line
 
     def clear_selected(self):
         name = self.point_var.get()

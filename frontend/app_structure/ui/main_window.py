@@ -133,8 +133,25 @@ class MainWindow:
         style_switcher = CircleButton(tool_bar_bottom, r=30, styles_manager=self.styles_manager, command=self.change_theme)
         style_switcher.pack("left", padx = (5, 5), pady = (5, 5))
         self.custom_buttons.append(style_switcher)
+        
+        action_toggle_blur = lambda: self.toggle_blur(sketch_canvas=sketch_canvas, style_switcher_button=style_switcher)
+        style_switcher = PrimaryButton(tool_bar_bottom, width=140, height=50, r=30, font_size = 8, text="BLUR", bg_style="light", styles_manager=self.styles_manager, command=action_toggle_blur)
+        style_switcher.pack("right", padx = (5, 5), pady = (5, 5))
+        self.custom_buttons.append(style_switcher)
+
+        action_toggle_blur = lambda: self.toggle_blur(sketch_canvas=sketch_canvas, style_switcher_button=style_switcher)
+        style_switcher = SecondarySideButtonR(tool_bar_bottom, width=140, height=50, r=30, font_size = 8, text="BLUR", bg_style="light", styles_manager=self.styles_manager, command=action_toggle_blur)
+        style_switcher.pack("right", padx = (5, 5), pady = (5, 5))
+        self.custom_buttons.append(style_switcher)
 
        
+    def toggle_blur(self, sketch_canvas, style_switcher_button):
+        if sketch_canvas.image:
+            sketch_canvas.toggle_blur()
+            if style_switcher_button.get_text() == "UNBLUR":
+                style_switcher_button.change_text_to(text="BLUR")
+            elif style_switcher_button.get_text() == "BLUR":
+                style_switcher_button.change_text_to(text="UNBLUR")
 
 
     def apply(self, canvas, gallery : Gallery, filter):
