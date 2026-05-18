@@ -42,10 +42,12 @@ POINT_RELATIONS = {
 
 class SketchCanvas:
     def __init__(self, master, styles_manager):
-        #TODO color store separately
         self.styles_manager = styles_manager
         self.master = master
         self.blurred = False
+        #color index for styles_manager color list from get_points_color
+        self.point_color_index = 0
+        self.text_color_index = 0
 
         # points holds points info with point name as a key and coords as values
         self.points = {}   # {name: {"x":..., "y":...}}
@@ -213,6 +215,8 @@ class SketchCanvas:
         # if not point_name in self.lines:
         #         self.lines[point_name] = []
         # self.lines[point_name].append(line_id)
+        print(f"Lines added for point: {point_name}")
+        print(f"Current lines info: {self.lines}")
 
     def remove_lines_for(self, point_name):
         if not point_name in self.points_info_lines:
@@ -231,6 +235,8 @@ class SketchCanvas:
                         self.lines.pop(line)
 
         self.points_info_lines[point_name] = []
+        print(f"Lines removed from point: {point_name}")
+        print(f"Current lines info: {self.lines}")
 
     def update_lines(self):
         # adjusted_old_lines = {} # {old line: new line}
@@ -251,19 +257,30 @@ class SketchCanvas:
             self.lines.pop(line)
             print(f"Add line: {start_point} - {end_point} : {new_line}")
             self.lines[new_line] = [start_point, end_point]
+            print("Adjust points info lines: change old line index to new one")
+            print(f"Points info lines before: {self.points_info_lines}")
+            for point in list(self.points_info_lines.keys()):
+                self.points_info_lines[point] = [new_line if line_id == line else line_id for line_id in list(self.points_info_lines[point])]
+            print(f"Points info lines adjusted: {self.points_info_lines}")
+
+        print(f"Lines updated")
+        print(f"Current lines info: {self.lines}")
+    
+    def _get_color(self, index):
+        return self.styles_manager.get_points_color()[index]
 
     def draw_point(self, name, x, y):
         r = 6
         self.canvas.create_oval(
             x - r, y - r, x + r, y + r,
-            fill="#ffffff", outline="black",
+            fill=self._get_color(self.point_color_index), outline="black",
             tags=(f"point_{name}",)
         )
         self.canvas.create_text(
             x + r + 8, y + r - 8,
             text=name,
             anchor="nw",
-            fill="#ffffff",
+            fill=self._get_color(self.text_color_index),
             tags=(f"point_{name}",)
         )
 
@@ -272,8 +289,14 @@ class SketchCanvas:
         x1, y1,
         x2, y2,
         width=2,
-        fill="#ffffff")
+        fill=self.styles_manager.get_light())
         return line
+
+    def set_point_color_index(self, index):
+        self.point_color_index = index
+
+    def set_text_color_index(self, index):
+        self.text_color_index = index
 
     def clear_selected(self):
         name = self.point_var.get()

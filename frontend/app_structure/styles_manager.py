@@ -1,4 +1,5 @@
 import ttkbootstrap as ttk
+from ttkbootstrap.constants import *
 
 
 
@@ -49,6 +50,14 @@ class StylesManager:
     
     def get_bg(self):
         return self.style.colors.bg
+    
+    def get_points_color(self):
+        """Colors should relate with get_text_biitstyles"""
+        return [self.style.colors.light, self.style.colors.dark, self.style.colors.danger]
+    
+    def get_text_bootstyles(self):
+        """Colors should relate with get_points_color"""
+        return [SECONDARY, DARK, DANGER]
 
         
 

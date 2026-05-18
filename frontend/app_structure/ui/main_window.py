@@ -134,15 +134,27 @@ class MainWindow:
         style_switcher.pack("left", padx = (5, 5), pady = (5, 5))
         self.custom_buttons.append(style_switcher)
         
-        action_toggle_blur = lambda: self.toggle_blur(sketch_canvas=sketch_canvas, style_switcher_button=style_switcher)
-        style_switcher = PrimaryButton(tool_bar_bottom, width=140, height=50, r=30, font_size = 8, text="BLUR", bg_style="light", styles_manager=self.styles_manager, command=action_toggle_blur)
-        style_switcher.pack("right", padx = (5, 5), pady = (5, 5))
-        self.custom_buttons.append(style_switcher)
+        _switch_point_color = lambda: self.switch_point_color(canvas=sketch_canvas, label=points_color_switcher_label)
+        points_color_switcher = CircleButton(tool_bar_bottom, r=30, styles_manager=self.styles_manager, command=_switch_point_color)
+        points_color_switcher.pack("left", padx = (5, 5), pady = (5, 5))
+        self.custom_buttons.append(points_color_switcher)
+        points_color_switcher_label = ttk.Label(tool_bar_bottom, text="point", bootstyle=SECONDARY, background=self.styles_manager.get_light())
+        points_color_switcher_label.pack(side="left")
+
+        _switch_text_color = lambda: self.switch_text_color(canvas=sketch_canvas, label=text_color_switcher_label)
+        text_color_switcher = CircleButton(tool_bar_bottom, r=30, styles_manager=self.styles_manager, command=_switch_text_color)
+        text_color_switcher.pack("left", padx = (5, 5), pady = (5, 5))
+        self.custom_buttons.append(text_color_switcher)
+        text_color_switcher_label = ttk.Label(tool_bar_bottom, text="point name", bootstyle=SECONDARY, background=self.styles_manager.get_light())
+        text_color_switcher_label.pack(side="left")
+
+
 
         action_toggle_blur = lambda: self.toggle_blur(sketch_canvas=sketch_canvas, style_switcher_button=style_switcher)
-        style_switcher = SecondarySideButtonR(tool_bar_bottom, width=140, height=50, r=30, font_size = 8, text="BLUR", bg_style="light", styles_manager=self.styles_manager, command=action_toggle_blur)
-        style_switcher.pack("right", padx = (5, 5), pady = (5, 5))
-        self.custom_buttons.append(style_switcher)
+        blur_button = PrimaryButton(tool_bar_bottom, width=140, height=50, r=30, font_size = 8, text="BLUR", bg_style="light", styles_manager=self.styles_manager, command=action_toggle_blur)
+        blur_button.pack("right", padx = (5, 5), pady = (5, 5))
+        self.custom_buttons.append(blur_button)
+
 
        
     def toggle_blur(self, sketch_canvas, style_switcher_button):
@@ -188,3 +200,28 @@ class MainWindow:
 
         for widget in self.widgets_to_update:
             widget.update_colors()
+
+
+    def switch_point_color(self, canvas, label):
+        current_index = canvas.point_color_index
+        if current_index == len(self.styles_manager.get_points_color()) - 1:
+            new_index = 0
+        else:
+            new_index = current_index + 1
+
+        canvas.set_point_color_index(new_index)
+        label.config(bootstyle=self.styles_manager.get_text_bootstyles()[new_index])
+        canvas.on_resize()
+
+
+    def switch_text_color(self, canvas, label):
+
+        current_index = canvas.text_color_index
+        if current_index == len(self.styles_manager.get_points_color()) - 1:
+            new_index = 0
+        else:
+            new_index = current_index + 1
+
+        canvas.set_text_color_index(new_index)
+        label.config(bootstyle=self.styles_manager.get_text_bootstyles()[new_index])
+        canvas.on_resize()
