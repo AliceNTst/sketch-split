@@ -1,4 +1,4 @@
 psycopg2 == 2.9.12
-#TODO check
-"fastapi[standard]"
-python-dotenv
+#"fastapi[standard]"
+fastapi == 0.136.1
+python-dotenv == 1.1.0
