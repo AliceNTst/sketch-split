@@ -1,4 +1,5 @@
 (install requirements for frontend and backend)
+(ensure your python version: at least 3.11.3)
 
 1. Prepare database: 
 -> Install your database Postgresql

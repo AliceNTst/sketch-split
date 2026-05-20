@@ -1,6 +1,4 @@
 import os
-import tkinter as tk
-import ttkbootstrap as ttk
 from PIL import Image, ImageTk, ImageDraw
 from data.image_data import ImageData
 
@@ -24,8 +22,6 @@ class ReferenceImages:
             self.images_paths = [image.path for image in self.images]
             self.images_number = len(self.images_paths)
 
-    
-
     def __calculate_images_paths(self, folder):
         images = os.listdir(folder)
         self.images_paths = [os.path.join(folder, image) for image in images]
@@ -47,6 +43,9 @@ class ReferenceImages:
         self.images = images
         self.images_paths = paths
     
+    def append(self, path, landmarks):
+        self.images_paths.append(path)
+        self.images.append(ImageData(path, landmarks))
 
     def add_images(self, paths:list):
 

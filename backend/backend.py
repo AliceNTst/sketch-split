@@ -75,9 +75,9 @@ def next_images(number: int):
 
 @app.get("/images/reload")
 def reload_images():
-    reference_images.images = reference_images.database.fetch_images()
-    reference_images.images_paths = [image.path for image in reference_images.images]
-    reference_images.images_number = len(reference_images.images_paths)
+    # reference_images.images = reference_images.database.fetch_images()
+    # reference_images.images_paths = [image.path for image in reference_images.images]
+    # reference_images.images_number = len(reference_images.images_paths)
     
     if reference_images.images_loaded == 0:
         next_images_batch = reference_images.next()
@@ -115,50 +115,14 @@ def remove_all_images():
 def set_sketch(sketch: Sketch):
     print(f"Landmarks-sketch: {sketch.landmarks}")
     database.input_image(path = sketch.path, landmarks= sketch.landmarks)
+    reference_images.append(path = sketch.path, landmarks= sketch.landmarks)
 
-# @app.get("/items/{item_id}")
-# def read_item(item_id: int, q: str | None = None):
-#     return {"item_id": item_id, "q": q}
 
 @app.post("/images/add")
 def add_images(images: Images):
     checked_paths = database.input_images(images.folder_path)
-    # folder = os.listdir(images.folder_path)
-    # paths = [os.path.join(images.folder_path, image) for image in folder]
     added_images = reference_images.add_images(checked_paths)
     print(f"Successfully added {len(added_images)} images")
 
 
 
-# tasks = ["Learn FastAPI", "Build project"]
-
-# @app.get("/tasks")
-# def get_tasks():
-#     return tasks
-
-# @app.get("/")
-# def read_root():
-#     return {"Hello": "World"}
-
-
-# @app.get("/items/{item_id}")
-# def read_item(item_id: int, q: str | None = None):
-#     return {"item_id": item_id, "q": q}
-
-
-
-
-
-# @app.get("/users")
-# def get_users():
-#     return {"Hello": "World"}
-
-
-# @app.get("/sort_users/{smth}")  #@app.get("/users/sort_users/{smth}")
-# def sort_users():
-#     return {"Hello": "World"}
-
-
-# @app.post("/add_users/{dir_path}")  #@app.get("/users/sort_users/{smth}")
-# def sort_users():
-#     return {"Hello": "World"}

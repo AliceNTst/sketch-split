@@ -17,7 +17,8 @@ class Database():
         dbname = os.getenv("dbname")
         user = os.getenv("user")
         password = os.getenv("password")
-        connection_string = f"host='{host}' dbname='{dbname}' user='{user}' password='{password}'"
+        port = os.getenv("port", "5432")
+        connection_string = f"host='{host}' dbname='{dbname}' user='{user}' password='{password}' port='{port}'"
 
         self.connection = psycopg2.connect(connection_string)
         self.cursor = self.connection.cursor()
@@ -135,110 +136,3 @@ class Database():
 
 
 database = Database()
-# database.input_images(r"C:\Users\Ramen\Downloads\test_images_sort")
-# images = database.fetch_images()
-# for image in images:
-#     print(image)
-# print(images[0])
-test_image = ImageData(r"C:\Users\Ramen\Downloads\test_images_sort\6.JPG")
-print(test_image.landmarks)
-database.input_sketch(path = r"C:\Users\Ramen\Downloads\test_images_sort\6.JPG", landmarks = test_image.landmarks.tolist())
-
-# database.remove_image(r"C:\Users\Ramen\Downloads\test_images_sort\6.JPG")
-# database.remove_images(r"C:\Users\Ramen\Downloads\test_images_sort")
-# database.input_sketch(r"C:\Users\Ramen\Downloads\test_images_sort\3.JPG", {"type": "CUSTOM"})
-# database.remove_sketch()
-
-
-
-# cursor = None
-# connection = None
-
-# def test_database():
-#     conn_string = "host='localhost' dbname='secondbase' user='postgres' password='datarinebase_2026'"
-
-# 	# print the connection string we will use to connect
-#     # print "Connecting to database\n	->%s" % (conn_string)
-
-# 	# get a connection, if a connect cannot be made an exception will be raised here
-#     conn = psycopg2.connect(conn_string)
-
-# 	# conn.cursor will return a cursor object, you can use this cursor to perform queries
-#     cursor = conn.cursor()
-#     print ("Connected!\n")
-
-#     cursor.execute("SELECT * FROM cats")
-
-#     data = cursor.fetchall()
-
-
-#     print(data)
-
-
-# def create_connection():
-#     global connection
-#     connection = psycopg2.connect(
-#     dbname="your_database",    # Database name
-#     user="your_username",      # PostgreSQL username
-#     password="your_password",  # Password for the user
-#     host="localhost",          # Database host
-#     port="5432"                # Database port
-# )
-
-#     # Open a cursor to perform database operations
-#     global cursor
-#     cursor = connection.cursor()
-
-#     # Print a success message
-#     print("Connected to PostgreSQL")
-
-
-# def create_table():
-#     # Define the SQL query for creating a table
-#     create_table_query = '''
-#     CREATE TABLE IF NOT EXISTS employees (
-#         id SERIAL PRIMARY KEY,
-#         name VARCHAR(100),
-#         position VARCHAR(100),
-#         hire_date DATE
-#     );
-#     '''
-
-#     # Execute the create table query
-#     cursor.execute(create_table_query)
-#     connection.commit()  # Commit the transaction
-#     print("Table created successfully")
-
-# def fetch_data():
-#     cursor.execute("SELECT * FROM employees;")
-#     rows = cursor.fetchall()
-#     for row in rows:
-#         print(row)
-
-
-# def insert_data(name, position, hire_date):
-#     insert_query = '''
-#     INSERT INTO employees (name, position, hire_date)
-#     VALUES (%s, %s, %s) RETURNING id;
-#     '''
-#     cursor.execute(insert_query, (name, position, hire_date))
-#     connection.commit()
-#     print("Employee inserted with ID:", cursor.fetchone()[0])
-
-# def update_data(new_position, emp_id):
-#     update_query = '''
-#     UPDATE employees
-#     SET position = %s
-#     WHERE id = %s;
-#     '''
-#     cursor.execute(update_query, (new_position, emp_id))
-#     connection.commit()
-#     print("Employee position updated")
-
-# def delete_data(emp_id):
-#     delete_query = '''
-#     DELETE FROM employees WHERE id = %s;
-#     '''
-#     cursor.execute(delete_query, (emp_id,))
-#     connection.commit()
-#     print("Employee deleted")

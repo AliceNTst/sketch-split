@@ -76,7 +76,6 @@ class Filter:
                 case "HEAVY":
                     return {"main_option" : "HEAVY"}
                 case "CUSTOM":
-                    print("In development")
                     custom_options_dict = self.__get_custom_options_dictionary()
                     return {"main_option" : "CUSTOM",
                             "custom_options" : custom_options_dict}
