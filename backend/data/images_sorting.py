@@ -48,37 +48,6 @@ def __compare_angles(angle1, angle2):
     return diff
 
 
-# def __compare_images(image1, image2, coefficients = Coefficients.DEFAULT):
-#     # factor = 0
-#     factor_parts = 0
-#     #k for parts: shoulders, hips, torso left, torso right, left forearm, left arm, right forearm, right arm, left thigh, left calve, right thigh, right calve
-#     #            sh, h, tl, tr, lf, la, rf, ra, lt, lc, rt, rc
-#     # default: shoulders: how straight, back or front; hips; torso sides: body upwards or sideways; legs thigh: standing, lying, sitting
-#     # kn_parts = [0.8, 0.3, 0.5, 0.5, 0, 0, 0, 0, 0.5, 0, 0.5, 0]
-#     kn_parts = coefficients["kn_parts"]
-#     kn_parts_sum = 0
-#     # kn_parts = [2, 1]
-#     for part in range(len(kn_parts)):
-#         factor_parts += kn_parts[part]*__compare_angles(image1.parts_angles[part], image2.parts_angles[part])
-#         kn_parts_sum += kn_parts[part]
-#     factor_parts = factor_parts / kn_parts_sum
-
-#     factor_connections = 0
-#     #k for connections: 
-#     # default: hips-leg connection; shoulder-torso: bending forward body or straight
-#     # kn_connections = [0, 0, 0.5, 0.5, 0.5, 0.5, 0, 0, 0, 0]
-#     kn_connections = coefficients["kn_connections"]
-#     kn_connections_sum = 0
-#     for connection in range(len(kn_connections)):
-#         factor_connections += kn_connections[connection]*__compare_angles(image1.connection_angles[connection], image2.connection_angles[connection])
-#         kn_connections_sum += kn_connections[connection]
-#     factor_connections = factor_connections / kn_connections_sum
-
-#     # factor = 2*factor_parts + factor_connections
-#     factor = factor_parts + factor_connections
-
-#     return factor
-
 
 def __compare_images(image1, image2, coefficients = Coefficients.DEFAULT):
     # factor = 0
@@ -140,6 +109,7 @@ def sort_images(sketch, images, coefficients = Coefficients.DEFAULT):
     # filtered_for_sort = sorted((obj for obj in sorted_images if key_filter(obj) < threshold), key = key_filter)
     # sorted_images.sort(reverse=True, key=key)
     filtered_for_sort.sort(key=key)
+    print("Top sorted keys:")
     for img in filtered_for_sort[0:10]:
         print(key(img))
 
@@ -157,6 +127,7 @@ def sort_images(sketch, images, coefficients = Coefficients.DEFAULT):
 #         kn_parts_sum += kn_parts[part]
 #     factor_parts = factor_parts / kn_parts_sum
 #     return factor_parts
+
 def get_coefficients(options):
         main_option = options["main_option"]
         match main_option:

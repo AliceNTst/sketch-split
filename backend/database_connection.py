@@ -31,8 +31,12 @@ class Database():
 
         images = []
         for row in rows:
-            image = ImageData(path = row[0], landmarks=numpy.array(row[1]), parts_angles=numpy.array(row[2]), connection_angles=numpy.array(row[3]))
-            images.append(image)
+            if os.path.isfile(row[0]):
+                image = ImageData(path = row[0], landmarks=numpy.array(row[1]), parts_angles=numpy.array(row[2]), connection_angles=numpy.array(row[3]))
+                images.append(image)
+                print(f"Added image: {row[0]}")
+            else:
+                print(f"Couldnt find image: {row[0]}")
         # for row in rows:
         #     print(row)
         return images

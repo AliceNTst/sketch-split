@@ -28,8 +28,8 @@ POINT_NAMES = [
 POINT_RELATIONS = {
     "shoulder-left" : ["shoulder-right", "hip-left", "elbow-left"],
     "shoulder-right" : ["shoulder-left", "hip-right", "elbow-right"],
-    "hip-left" : ["hip-right", "shoulder-left"],
-    "hip-right" : ["hip-left" , "shoulder-right"],
+    "hip-left" : ["hip-right", "shoulder-left", "knee-left"],
+    "hip-right" : ["hip-left" , "shoulder-right", "knee-right"],
     "elbow-left" : ["shoulder-left", "wrist-left"],
     "elbow-right" : ["shoulder-right" , "wrist-right"],
     "knee-left" : ["hip-left", "ankle-left"],

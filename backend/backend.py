@@ -60,10 +60,11 @@ def sort_images(options: Options):
 
     sorted_images = images_sorting.sort_images(sketch= sketch, images=images, coefficients=coefficients)
     sorted_paths = [image.path for image in sorted_images]
-    reference_images.set_images(sorted_images, sorted_paths)
+    print(f"Sorted images: {sorted_paths}")
+    reference_images.set_images(images = sorted_images, paths = sorted_paths)
     reference_images.reset_loaded_images()
+    # print(f"Check 1: {sorted_images[0].landmarks}")
 
-    print(sorted_paths[0 : 10])
 
 
 
@@ -71,7 +72,7 @@ def sort_images(options: Options):
 def next_images(number: int):
     next_images_batch = reference_images.next(number)
     print(f"Next images batch: {next_images_batch}")
-    return reference_images.next(number)
+    return next_images_batch
 
 @app.get("/images/reload")
 def reload_images():
@@ -84,7 +85,9 @@ def reload_images():
         print(f"Next: {next_images_batch}")
         return next_images_batch
     else:
-        return reference_images.get_loaded_images()
+        images = reference_images.get_loaded_images()
+        print(f"Get loaded images: {images}")
+        return images
 
 @app.get("/images/loaded")
 def get_loaded_images():

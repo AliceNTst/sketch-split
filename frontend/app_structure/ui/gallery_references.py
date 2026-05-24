@@ -42,7 +42,8 @@ class Gallery:
         self.create_columns()
         # self.load_images(self.reference_images.next(20))
         # self.load_images(self.request.next(20))
-        self.load_images(self.request.reload())
+        # self.load_images(self.request.reload())
+        self.reload_images()
 
         # self.canvas.bind("<MouseWheel>", self.on_scroll)
         self.canvas.bind("<Enter>", lambda e: self.canvas.bind_all("<MouseWheel>", self.scroll))
@@ -80,6 +81,7 @@ class Gallery:
         if not images_paths:
             return
 
+        print(f"Loading {len(images_paths)} images: {images_paths}")
         self.loaded = False
     
         # frame_columns = []
@@ -146,7 +148,8 @@ class Gallery:
         if self.canvas.yview()[1] >= 0.9:
             # print(self.canvas.yview())
             # self.load_images(self.reference_images.next(20))
-            self.load_images(self.request.next(20))
+            next_batch = self.request.next(20)
+            self.load_images(next_batch)
 
 
     def adjust_columns_width(self, e):

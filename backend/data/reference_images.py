@@ -20,6 +20,7 @@ class ReferenceImages:
         else:
             self.images = self.database.fetch_images()
             self.images_paths = [image.path for image in self.images]
+            print(f"Added images to RefImages: {self.images_paths}")
             self.images_number = len(self.images_paths)
 
     def __calculate_images_paths(self, folder):
@@ -38,14 +39,17 @@ class ReferenceImages:
                 print(f"Not able to add image: {path}")
                 return
             self.images.append(image)
+            # self.images_number += 1
 
     def set_images(self, images, paths):
         self.images = images
         self.images_paths = paths
+        self.images_number = len(paths)
     
     def append(self, path, landmarks):
         self.images_paths.append(path)
         self.images.append(ImageData(path, landmarks))
+        self.images_number += 1
 
     def add_images(self, paths:list):
 
@@ -59,8 +63,10 @@ class ReferenceImages:
 
         if self.images_paths == None:
             self.images_paths = paths
+            self.images_number = len(paths)
         else:
             self.images_paths.extend(paths)
+            self.images_number = self.images_number + len(paths)
 
         return paths
     
@@ -82,6 +88,7 @@ class ReferenceImages:
         new_loaded_count = self.images_loaded + count
         next_images_batch = self.images_paths[self.images_loaded : new_loaded_count]
         self.images_loaded = new_loaded_count
+        print(f"images_number: {self.images_number} images_loaded: {self.images_loaded} images_next: {self.next_images_batch_number}")
         return next_images_batch 
 
 
