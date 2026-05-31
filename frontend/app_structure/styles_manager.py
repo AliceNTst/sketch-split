@@ -12,9 +12,6 @@ class StylesManager:
         self.themes = self.style.theme_names()[18:]
         self.current_theme_number = self.themes.index(theme)
 
-    # def apply_theme(self, theme_name):
-    #     self.theme = ColorPalettes[theme_name]
-    #     self.current_theme = theme_name
 
     def load_themes(self):
         self.style = ttk.Style()

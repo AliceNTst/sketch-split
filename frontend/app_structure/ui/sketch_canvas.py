@@ -73,7 +73,6 @@ class SketchCanvas:
 
     def grid(self, row, column, sticky):
         self.canvas.grid(row=row, column=column, sticky=sticky)
-        # self.canvas.bind("<Button-1>", self.on_click)
 
     def pack(self, fill, expand):
         self.canvas.pack(fill = fill, expand = expand)
@@ -81,9 +80,6 @@ class SketchCanvas:
     def add_to_paned(self, paned, weight=1):
         paned.add(self.canvas, weight=weight)
         
-
-    # def bind(self, sequence, function):
-    #     self.canvas.bind("<Button-1>", self.on_click)
 
     def toggle_blur(self):
         if not self.blurred:
@@ -113,9 +109,6 @@ class SketchCanvas:
         self.tk_image = ImageTk.PhotoImage(self.resized_image)
 
         self.canvas.delete("all")
-        #self.canvas.config(width=self.tk_image.width(), height=self.tk_image.height())
-        # self.canvas.config(width=1920, height=900)
-        # self.canvas.create_image(0, 0, anchor="nw", image=self.tk_image, tags="bg")
         self.image_id = self.canvas.create_image(0, 0, anchor="nw", image=self.tk_image, tags="bg")
 
         # redraw saved points if any
@@ -158,9 +151,6 @@ class SketchCanvas:
             self.draw_point(name, p["x"]* self.image_scale, p["y"]* self.image_scale)
             print(f'{p["x"]}, {p["y"]}')
 
-        # for point in list(self.points_info_lines.keys()):
-        #     self.remove_lines_for(point)
-        #     self.add_lines_for(point)
         self.update_lines()
 
     def on_click(self, event):
@@ -284,7 +274,6 @@ class SketchCanvas:
         name = self.point_var.get()
         self.points.pop(name, None)
         self.canvas.delete(f"point_{name}")
-        # self.info.config(text=f"Cleared {name}")
 
         self.remove_lines_for(name)
 
@@ -362,7 +351,6 @@ class SketchCanvas:
                 case _:
                     print(f"ATTENTION - strange naming for point in sketch: {point_name}")
 
-        # landmarks = numpy.array(landmarks)
         return landmarks
 
 

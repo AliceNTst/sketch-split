@@ -3,7 +3,6 @@ import mediapipe as mp
 from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
 import numpy
-import os
 from PIL import Image, ExifTags, ImageOps
 import config
 
@@ -122,8 +121,6 @@ class ImageData():
     
 
     def __move_vector_to_root(sefl, vector):
-        #TODO not added checking points in vector
-
         # vector - [[x1,y1], [x2,y2]]
         # x2 - x1, y2 - y1
         return [vector[1][0] - vector[0][0], vector[1][1] - vector[0][1]]
@@ -192,50 +189,3 @@ class ImageData():
         self.connection_angles = numpy.array(angles)
 
 
-    
-
-# def compare_angles(part1_angle, part2_angle):
-#     diff = abs(part1_angle - part2_angle)
-#     if diff > math.pi:
-#         diff = 2 * math.pi - diff
-
-#     # as idea diff**2 
-#     return diff
-
-
-# def compare_images(image1, image2):
-#     # factor = 0
-#     factor_parts = 0
-#     #k for parts: shoulders, hips, torso left, torso right, left forearm, left arm, right forearm, right arm, left thigh, left calve, right thigh, right calve
-#     #            sh, h, tl, tr, lf, la, rf, ra, lt, lc, rt, rc
-#     # default: shoulders: how straight, back or front; hips; torso sides: body upwards or sideways; legs thigh: standing, lying, sitting
-#     kn_parts = [0.8, 0.3, 0.5, 0.5, 0, 0, 0, 0, 0.5, 0, 0.5, 0]
-#     kn_parts_sum = 0
-#     # kn_parts = [2, 1]
-#     for part in range(len(kn_parts)):
-#         factor_parts += kn_parts[part]*compare_angles(image1.parts_angles[part], image2.parts_angles[part])
-#         kn_parts_sum += kn_parts[part]
-#     factor_parts = factor_parts / kn_parts_sum
-
-#     factor_connections = 0
-#     #k for connections: 
-#     # default: hips-leg connection; shoulder-torso: bending forward body or straight
-#     kn_connections = [0, 0, 0.5, 0.5, 0.5, 0.5, 0, 0, 0, 0]
-#     kn_connections_sum = 0
-#     for connection in range(len(kn_connections)):
-#         factor_connections += kn_connections[connection]*compare_angles(image1.connection_angles[connection], image2.connection_angles[connection])
-#         kn_connections_sum += kn_connections[connection]
-#     factor_connections = factor_connections / kn_connections_sum
-
-#     # factor = 2*factor_parts + factor_connections
-#     factor = factor_parts + factor_connections
-
-#     return factor
-
-# def sort_images(sketch, images):
-#     #TODO maybe better move to reference images
-#     sorted_images = images
-#     key = lambda image: compare_images(sketch, image)
-#     # sorted_images.sort(reverse=True, key=key)
-#     sorted_images.sort(key=key)
-#     return sorted_images

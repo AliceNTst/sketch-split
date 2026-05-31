@@ -1,8 +1,5 @@
 import requests
 
-# base_url = "http://127.0.0.1:8000/"
-# base_url = "http://127.0.0.1:8000/images/sort"
-
 class RequestData():
     def __init__(self, base_url):
         self.base_url = base_url
@@ -32,7 +29,6 @@ class RequestData():
     def __sort(self, options):
         """Before sorting be sure that sketch is set"""
         url = self.base_url + "images/sort"
-        # params = {}
         response = requests.post(url, json=options)
         return response.json()
 
@@ -63,4 +59,4 @@ class RequestData():
 local_request = RequestData("http://127.0.0.1:8000/")
 
 
-# print(local_request.next())
+

@@ -7,7 +7,6 @@ from app_structure.ui.sketch_canvas import *
 from app_structure.ui.gallery_references import Gallery
 from app_structure.ui.filter import Filter
 from app_structure.api.api_requests import *
-from tkinter import font
 
 class MainWindow:
     styles_manager: StylesManager = None
@@ -17,12 +16,6 @@ class MainWindow:
         self.request = local_request
         self.create_layout(app)
 
-        #TODO adjust font
-        # Get Tk's default font object
-        # default_font = font.nametofont("TkDefaultFont")
-
-        # # Modify it in place  "Segoe UI"
-        # default_font.configure(family="Nunito")
         
 
     def create_layout(self, app):
@@ -93,32 +86,14 @@ class MainWindow:
         tool_bar_right = ttk.Frame(right)
         tool_bar_right.grid(row=0, column=0, sticky="ew")
 
-        # style = ttk.Style()
-        # style.configure(
-        #     "Custom.TButton",
-        #     foreground="#C5E64F",   # text color
-        #     font=("Segoe UI", 10, "bold")
-        # )
-
-        # ttk.Button(tool_bar_right, text="filter", style="Custom.TButton", command=filter_frame.toggle).pack(side="left")
-
         filter_button = SecondarySideButtonL(tool_bar_right, width=100, height=50, r=40, font_size = 10, text="filter", styles_manager=self.styles_manager, command=filter_frame.toggle)
         filter_button.pack("left")
         self.custom_buttons.append(filter_button)
-
-        # action = lambda: self.styles_manager.apply_theme("green")
-        # ttk.Button(tool_bar_right, text="filter", style="Custom.TButton", command=action).pack(side="right")
-
-
-        # reload = lambda: gallery.reload_images()
-        # ttk.Button(tool_bar_right, text="reload", style="Custom.TButton", command=reload).pack(side="right")
 
         reload = lambda: gallery.reload_images()
         reload_gallery_button = SecondaryButton(tool_bar_right, width=70, height=30, r=30, font_size = 8, text="reload", styles_manager=self.styles_manager, command=reload)
         reload_gallery_button.pack("right")
         self.custom_buttons.append(reload_gallery_button)
-
-       
 
         
         gallery = Gallery(master = right, request = self.request)
@@ -132,7 +107,6 @@ class MainWindow:
         add_sketch_to_gallery = SecondaryButton(tool_bar_left, width=120, height=30, r=30, font_size = 8, text="add to Gallery", bg_style="primary", styles_manager=self.styles_manager, command=_add_to_gallery)
         add_sketch_to_gallery.pack(side="right", padx = (0, 10))
         self.custom_buttons.append(add_sketch_to_gallery)
-
 
 
         tool_bar_bottom = ttk.Frame(master=left, bootstyle=LIGHT)
@@ -156,7 +130,6 @@ class MainWindow:
         text_color_switcher_label.pack(side="left")
 
 
-
         action_toggle_blur = lambda: self.toggle_blur(sketch_canvas=sketch_canvas, style_switcher_button=style_switcher)
         blur_button = PrimaryButton(tool_bar_bottom, width=140, height=50, r=30, font_size = 8, text="BLUR", bg_style="light", styles_manager=self.styles_manager, command=action_toggle_blur)
         blur_button.pack("right", padx = (5, 5), pady = (5, 5))
@@ -178,25 +151,15 @@ class MainWindow:
 
         if numpy.array_equal(landmarks, None):
             return
-        
-        # sketch_data = ImageData(landmarks = landmarks)
 
         options = filter.get_options()
-        # coefficients = self.get_coefficients(options)
-        # print(coefficients)
 
         self.request.sort(options = options, path = "", landmarks=landmarks)
-        # sorted_images = images_sorting.sort_images(sketch= sketch_data, images=referenceImages.images, coefficients=coefficients)
-        # sorted_images_
-        # sorted_paths = [image.path for image in sorted_images]
-        # referenceImages.set_images(sorted_images, sorted_paths)
         gallery.reload_images()
 
     
 
     def change_theme(self):
-        #TODO create Next theme
-        # self.styles_manager.apply_theme("green")
         self.styles_manager.next_theme()
         for button in self.custom_buttons:
             button.update_colors()

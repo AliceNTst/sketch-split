@@ -1,8 +1,6 @@
-import os
 import tkinter as tk
 import ttkbootstrap as ttk
 from PIL import Image, ImageTk, ImageDraw
-# from app_structure.data.reference_images import ReferenceImages
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 from app_structure.ui.button import *
@@ -13,8 +11,6 @@ from app_structure.api.api_requests import *
 class Gallery:
     def __init__(self, master,  request: RequestData):
         self.master = master
-        # self.images = ReferenceImages().get_images_paths(folder)
-        # self.reference_images = referenceImages
         self.request = request
         self.images_loaded_number = 0
         self.column_width = 500
@@ -37,22 +33,14 @@ class Gallery:
 
         self.columns = 3
         self.col_heights = [0] * self.columns
-        # self.rows = [0] * self.columns
 
         self.create_columns()
-        # self.load_images(self.reference_images.next(20))
-        # self.load_images(self.request.next(20))
-        # self.load_images(self.request.reload())
         self.reload_images()
 
-        # self.canvas.bind("<MouseWheel>", self.on_scroll)
         self.canvas.bind("<Enter>", lambda e: self.canvas.bind_all("<MouseWheel>", self.scroll))
         self.canvas.bind("<Leave>", lambda e: self.canvas.unbind_all("<MouseWheel>"))
-        # self.columns_container.bind("<Configure>", self.adjust_columns_width(), add="+")
         self.canvas.bind("<Configure>", self.adjust_columns_width)
         
-
-        # self.reload_images()
         
 
 
@@ -84,10 +72,6 @@ class Gallery:
         print(f"Loading {len(images_paths)} images: {images_paths}")
         self.loaded = False
     
-        # frame_columns = []
-        # for column in range(self.columns):
-        #     frame_columns.append(ttk.Frame(self.columns_container))
-        #     frame_columns[column].grid(row=0, column=column, sticky="n")
         for path in images_paths:
     
             img = Image.open(path)
@@ -104,10 +88,7 @@ class Gallery:
             label.image = tk_img
             label.pack(padx=10, pady=10)
             
-
-            # self.col_heights[col] += 1
             self.col_heights[col] += img.height
-            # print(self.col_heights)
 
         # waits for images to be loaded fully
         self.canvas.update_idletasks()
@@ -121,9 +102,6 @@ class Gallery:
         for column in self.frame_columns:
             column.destroy()
             self.canvas.update_idletasks()
-            # for image in column.winfo_children():
-            #     image.destroy()
-            #     self.canvas.update_idletasks()
         self.create_columns()
 
         self.load_images(images_to_reload)
@@ -142,12 +120,9 @@ class Gallery:
 
 
     def on_scroll(self, *e):
-        # print(self.canvas.yview())
         if self.loaded == False:
             return
         if self.canvas.yview()[1] >= 0.9:
-            # print(self.canvas.yview())
-            # self.load_images(self.reference_images.next(20))
             next_batch = self.request.next(20)
             self.load_images(next_batch)
 

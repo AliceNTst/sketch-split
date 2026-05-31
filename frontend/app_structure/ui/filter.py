@@ -1,19 +1,11 @@
 import tkinter as tk
-from tkinter import filedialog, ttk, messagebox
-from PIL import Image, ImageTk
-import json
-# from app_structure.data.image_data import ImageData
-import config
-import numpy
+from tkinter import ttk
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
-from app_structure.styles_manager import StylesManager
 from app_structure.ui.button import *
 from app_structure.ui.sketch_canvas import *
-from app_structure.ui.gallery_references import Gallery
-# from app_structure.data import images_sorting
-# from app_structure.data.images_sorting import Coefficients
-# from app_structure.data.reference_images import ReferenceImages
+
+
 
 
 class Filter:

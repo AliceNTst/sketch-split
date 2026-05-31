@@ -1,5 +1,4 @@
 psycopg2 == 2.9.12
-#"fastapi[standard]"
 fastapi == 0.136.1
 python-dotenv == 1.1.0
 uvicorn == 0.46.0

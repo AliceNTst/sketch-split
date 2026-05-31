@@ -85,10 +85,7 @@ class StylisedButton():
         
         else:
             print("Styles manager was not given to button. Please add styles manager while creating Custom Button")
-        # self.canvas.configure(bg="#624996")
-        # self.default_color = "#e5ddef"
-        # self.hover_color = "#9c96d7"
-        # self.text_color = "#624996"
+        
         
 
     def update_colors(self):
@@ -120,14 +117,6 @@ class SideButtonL(StylisedButton):
             outline="",
             **kwargs
         )
-
-        # Left circle
-        # left = canvas.create_oval(
-        #     x1, y1,
-        #     x1 + 2 * r, y2,
-        #     outline="",
-        #     **kwargs
-        # )
 
         # Right circle
         right = canvas.create_oval(
@@ -167,13 +156,6 @@ class SideButtonR(StylisedButton):
             **kwargs
         )
 
-        # Right circle
-        # right = canvas.create_oval(
-        #     x2 - 2 * r, y1,
-        #     x2, y2,
-        #     outline="",
-        #     **kwargs
-        # )
         return [rect, left]
     
 
@@ -270,22 +252,6 @@ class SecondaryButton(StylisedButton):
         if self.label != None:
             self.canvas.itemconfig(self.label, fill=self.text_color)
 
-    # def create_shape(self, canvas, x1, y1, x2, y2, r=20, **kwargs):
-    #     points = [
-    #         x1+r, y1,
-    #         x2-r, y1,
-    #         x2, y1,
-    #         x2, y1+r,
-    #         x2, y2-r,
-    #         x2, y2,
-    #         x2-r, y2,
-    #         x1+r, y2,
-    #         x1, y2,
-    #         x1, y2-r,
-    #         x1, y1+r,
-    #         x1, y1
-    #     ]
-    #     return canvas.create_polygon(points, smooth=True, **kwargs)
 
 
 class SecondarySideButtonL(SecondaryButton):
@@ -326,15 +292,8 @@ class CircleButton(StylisedButton):
         self.text = text
         self.styles_manager = styles_manager
         self.label = None
-        # super().__init__(master=master, width=width, height=height, r=r, text=text, command=command, font_size = font_size)
         self.canvas = ttk.Canvas(master, width=r, height=r)
-        # self.canvas.configure(bg="#624996")
-        # self.canvas.configure(bg=styles_manager.get_primary())
-        # self.default_color = styles_manager.get_primary()
-        # self.hover_color = "#9c96d7"
-        # self.text_color = "#624996"
         self.__set_colors()
-        # self.canvas.itemconfig(self.shape, fill=self.default_color)
         self.shapes = self.create_shape(self.canvas, r=r, fill=self.default_color, outline=self.default_color)
         if text != None:
             self.label = self.canvas.create_text((r)/2, (r)/2, text=text, fill=self.text_color, font=("Segoe UI", font_size))

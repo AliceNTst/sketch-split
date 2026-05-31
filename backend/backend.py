@@ -2,19 +2,9 @@ from fastapi import FastAPI
 from database_connection import Database
 from data.reference_images import ReferenceImages
 from data import images_sorting
-from data.image_data import ImageData
-import os
-
 from pydantic import BaseModel
 
 
-# class CustomOption:
-#     #primary - important, secondary - less important, free - can be any
-#     OPTIONS = [
-#     "primary",
-#     "secondary",
-#     "free"
-# ]
 class Options(BaseModel):
     main_option: str
     custom_options: dict = {}
@@ -33,8 +23,6 @@ reference_images = ReferenceImages(database)
 
 @app.get("/images")
 def get_images():
-    # images = database.fetch_images()
-    # return reference_images.images_paths
     images = database.fetch_images()
     images_paths = [image.path for image in images]
     return images_paths
@@ -63,14 +51,6 @@ def sort_images(options: Options):
     print(f"Sorted images: {sorted_paths[0:10]}...")
     reference_images.set_images(images = sorted_images, paths = sorted_paths)
     reference_images.reset_loaded_images()
-    # print(f"Check 1: {sorted_images[0].landmarks}")
-
-    #TODO for testing
-    print(f"Sketch: parts_angles: {sketch.parts_angles}  connection_angles: {sketch.connection_angles}")
-    for ref in sorted_images[0:10]:
-        print(f"Ref{ref.path}: parts_angles: {ref.parts_angles}  connection_angles: {ref.connection_angles}")
-    images_sorting.__compare_images_test(image1= sketch, image2=sorted_images[3], coefficients=coefficients)
-    images_sorting.__compare_images_test(image1= sketch, image2=sorted_images[4], coefficients=coefficients)
 
 
 
@@ -83,9 +63,6 @@ def next_images(number: int):
 
 @app.get("/images/reload")
 def reload_images():
-    # reference_images.images = reference_images.database.fetch_images()
-    # reference_images.images_paths = [image.path for image in reference_images.images]
-    # reference_images.images_number = len(reference_images.images_paths)
     
     if reference_images.images_loaded == 0:
         next_images_batch = reference_images.next()

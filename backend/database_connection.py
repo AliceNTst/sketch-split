@@ -1,5 +1,4 @@
 import psycopg2
-import sys
 import os
 from data.image_data import ImageData
 import json
@@ -37,8 +36,6 @@ class Database():
                 print(f"Added image: {row[0]}")
             else:
                 print(f"Couldnt find image: {row[0]}")
-        # for row in rows:
-        #     print(row)
         return images
 
     def __input_image(self, path):
@@ -61,7 +58,6 @@ class Database():
         values = (image.path, json.dumps(image.landmarks.tolist()), json.dumps(image.parts_angles.tolist()), json.dumps(image.connection_angles.tolist()))
 
         self.cursor.execute(f"INSERT INTO images ({columns}) VALUES (%s, %s, %s, %s);", values)
-        # self.connection.commit()
         print(f"Image: {path} was added to database")
         return path
 
@@ -127,7 +123,6 @@ class Database():
 
         self.cursor.execute(f"INSERT INTO sketch (id, path, landmarks) VALUES (%s, %s, %s) ON CONFLICT (id) DO UPDATE SET landmarks = EXCLUDED.landmarks, path = EXCLUDED.path;", (values))
         self.connection.commit()
-        # self.cursor.execute(f"INSERT INTO sketch (id, path, landmarks) VALUES (%s, %s, %s);", (values))
 
 
     def remove_sketch(self):

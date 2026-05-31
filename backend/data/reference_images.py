@@ -1,5 +1,4 @@
 import os
-from PIL import Image, ImageTk, ImageDraw
 from data.image_data import ImageData
 
 
