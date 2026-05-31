@@ -60,10 +60,17 @@ def sort_images(options: Options):
 
     sorted_images = images_sorting.sort_images(sketch= sketch, images=images, coefficients=coefficients)
     sorted_paths = [image.path for image in sorted_images]
-    print(f"Sorted images: {sorted_paths}")
+    print(f"Sorted images: {sorted_paths[0:10]}...")
     reference_images.set_images(images = sorted_images, paths = sorted_paths)
     reference_images.reset_loaded_images()
     # print(f"Check 1: {sorted_images[0].landmarks}")
+
+    #TODO for testing
+    print(f"Sketch: parts_angles: {sketch.parts_angles}  connection_angles: {sketch.connection_angles}")
+    for ref in sorted_images[0:10]:
+        print(f"Ref{ref.path}: parts_angles: {ref.parts_angles}  connection_angles: {ref.connection_angles}")
+    images_sorting.__compare_images_test(image1= sketch, image2=sorted_images[3], coefficients=coefficients)
+    images_sorting.__compare_images_test(image1= sketch, image2=sorted_images[4], coefficients=coefficients)
 
 
 
